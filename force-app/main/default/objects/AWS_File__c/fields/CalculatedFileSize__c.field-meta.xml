@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CalculatedFileSize__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF (Size__c &gt;= 1000000000, TEXT(ROUND(Size__c/1000000000, 1)) &amp; &quot; GB&quot;, 
+IF (Size__c &gt;= 1000000, TEXT(ROUND(Size__c/1000000,1)) &amp; &quot; MB&quot;, TEXT(ROUND(Size__c/1000,1)) &amp; &quot; KB&quot;))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>File Size</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

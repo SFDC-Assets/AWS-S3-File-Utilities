@@ -1,0 +1,20 @@
+{
+  "orgName": "AWS S3 Utilities",
+  "edition": "Developer",
+  "features": [
+    "EnableSetPasswordInApi",
+    "Communities",
+    "Chatbot"
+  ],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    }
+  }
+}

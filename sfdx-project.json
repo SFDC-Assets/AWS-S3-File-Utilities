@@ -1,0 +1,25 @@
+{
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true,
+            "package": "AWS S3 File Utilities",
+            "versionName": "Version 1.0.0.0",
+            "versionNumber": "1.0.0.0",
+            "unpackagedMetadata": {
+                "path": "force-development-unpackaged"
+            }
+        },
+        {
+            "path": "force-development-unpackaged",
+            "default": false
+        }
+    ],
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "55.0",
+    "packageAliases": {
+        "AWS S3 File Utilities": "0Ho2E000000blR3SAI",
+        "AWS S3 File Utilities@1.0.0-0": "04t2E000003kYfIQAU"
+    }
+}
