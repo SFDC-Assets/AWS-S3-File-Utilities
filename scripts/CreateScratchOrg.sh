@@ -32,8 +32,6 @@ echo "*** Pushing metadata to scratch org ..."
 sfdx force:source:push || exit 1
 echo "*** Generating password for your user ..."
 sfdx force:user:password:generate --targetusername "$orgAlias" --loglevel error
-echo "*** Assigning permission sets to your user ..."
-sfdx force:user:permset:assign --permsetname "AWS_S3_File_Utilities" --loglevel error
 echo "*** Setting time zone for your user ..."
 sfdx force:data:record:update --sobjecttype User --where "Name='User User'" --values "TimeZoneSidKey='America/New_York'" --loglevel error
 echo "*** Enabling debug mode for your user  ..."

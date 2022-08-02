@@ -36,15 +36,39 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
+                    <name>awsAccessKeyId</name>
+                    <value>XXXXXXXXXXXXXXXXXXXX</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>awsBucketName</name>
+                    <value>MyBucket</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>awsRegion</name>
+                    <value>us-east-1</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>awsSecretAccessKey</name>
+                    <value>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>cardTitle</name>
-                    <value>AWS S3 File Upload</value>
+                    <value>AWS Files</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>hideIcon</name>
                     <value>false</value>
                 </componentInstanceProperties>
-                <componentName>awsS3FileUpload</componentName>
-                <identifier>c_awsS3FileUpload</identifier>
+                <componentInstanceProperties>
+                    <name>linkExpirationSecs</name>
+                    <value>86400</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>prefix</name>
+                    <value>John&apos;s Scratch Org</value>
+                </componentInstanceProperties>
+                <componentName>awsS3Files</componentName>
+                <identifier>c_awsS3Files</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>

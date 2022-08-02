@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <isExposed>false</isExposed>
+    <masterLabel>AWS S3 File Utilities</masterLabel>
+    <description>A service component containing functions used by the AWS S3 Utilities.</description>
+</LightningComponentBundle>
