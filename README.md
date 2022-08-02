@@ -2,7 +2,7 @@
 
 <h1 align="center">AWS S3 UTILITIES</h1>
 <p align="center">
-This package contains Lightning components and other support to demo Salesforce connectivity to [Amazon Web Services](https://aws.amazon.com) (AWS) [S3 file storage](https://aws.amazon.com/aws/s3).
+This package contains Lightning components and other support to demo Salesforce connectivity to <a href="https://aws.amazon.com">Amazon Web Services</a> (AWS) <a href="https://aws.amazon.com/aws/s3">S3 File Storage</a>.
 </p>
 
 ## Summary
