@@ -14,12 +14,11 @@
         <targetConfig targets="lightning__RecordPage,lightning__AppPage,lightningCommunity__Default">
             <property name="cardTitle" label="Card Title" type="String" default="AWS Files" description="The title to be used at the top of the card." />
             <property name="hideIcon" label="Hide the AWS logo icon" type="Boolean" default="false" description="Hide the AWS logo on the Lightning card." />
-            <property name="prefix" label="Demo Prefix" type="String" default="Change Me" description="A string that will uniquely identify your demo environment in the shared S3 bucket, such as 'Veterans Administration Demo on Tuesday'." />
+            <property name="prefix" label="Demo Prefix" type="String" description="A string that will uniquely identify your demo environment in the shared S3 bucket, such as 'Veterans Administration Demo on Tuesday'." />
             <property name="awsBucketName" label="AWS Bucket Name" type="String" default="MyBucket" description="The AWS bucket name." required="true" />
             <property name="awsRegion" label="AWS Region" type="String" default="us-east-1" description="The AWS region in which the S3 bucket is located." required="true" />
             <property name="awsAccessKeyId" label="AWS Access Key Id" type="String" default="XXXXXXXXXXXXXXXXXXXX" description="The AWS access key Id." required="true" />
             <property name="awsSecretAccessKey" label="AWS Secret Access Key" type="String" default="YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" description="The AWS secret access key." required="true" />
-            <property name="linkExpirationSecs" label="Link Expiration (seconds)" type="Integer" default="86400" description="The number of seconds after which the links in the table will expire (defaults to 24 hours)." />
        </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

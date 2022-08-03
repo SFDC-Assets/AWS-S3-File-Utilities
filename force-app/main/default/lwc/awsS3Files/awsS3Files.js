@@ -10,10 +10,13 @@
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript } from 'lightning/platformResourceLoader';
-import { humanReadableSize, getIconName } from 'c/awsS3Utilities';
+import { humanReadableSize, getIconName, getFileExtension } from 'c/awsS3Utilities';
 import AWS_S3_SDK from '@salesforce/resourceUrl/AWS_S3_SDK';
 
 const MAX_FILE_NAME_LENGTH = 1024;
+const UNCONFIGURED_ACCESS_KEY_ID = 'XXXXXXXXXXXXXXXXXXXX';
+const UNCONFIGURED_SECRET_ACCESS_KEY = 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY';
+const LINK_EXPIRATION_SECS = 24 * 60 * 60;
 
 export default class AwsS3Files extends LightningElement {
 	@api cardTitle = 'AWS Files';
@@ -23,7 +26,6 @@ export default class AwsS3Files extends LightningElement {
 	@api awsAccessKeyId;
 	@api awsSecretAccessKey;
 	@api awsBucketName;
-	@api linkExpirationSecs = 86400;
 	@api recordId;
 
 	rendered = false;
@@ -34,10 +36,11 @@ export default class AwsS3Files extends LightningElement {
 	awsBucketPrefix;
 
 	get componentConfigured() {
-		return this.awsAccessKeyId !== 'XXXXXXXXXXXXXXXXXXXX' && this.awsSecretAccessKey !== 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY';
+		return this.awsAccessKeyId !== UNCONFIGURED_ACCESS_KEY_ID && this.awsSecretAccessKey !== UNCONFIGURED_SECRET_ACCESS_KEY;
 	}
 
 	@track fileList = [];
+
 	get fileListEmpty() {
 		return this.fileList.length === 0;
 	}
@@ -73,7 +76,7 @@ export default class AwsS3Files extends LightningElement {
 
 	renderedCallback() {
 		console.log(`awsBucketPrefix: ${this.awsBucketPrefix}`);
-		if (!this.rendered) {
+		if (!this.rendered && this.componentConfigured) {
 			loadScript(this, AWS_S3_SDK)
 				.then(() => {
 					AWS.config = new AWS.Config({
@@ -124,9 +127,8 @@ export default class AwsS3Files extends LightningElement {
 						);
 					} else if (data) {
 						data.Contents.forEach((file) => {
-							let fileName = file.Key.replace(`${this.awsBucketPrefix}`, '');
+							let fileName = file.Key.replace(this.awsBucketPrefix, '');
 							this.fileList.push({
-								id: file.ETag.replaceAll('"', ''),
 								selected: false,
 								name: fileName,
 								key: file.Key,
@@ -134,14 +136,13 @@ export default class AwsS3Files extends LightningElement {
 								link: this.s3.getSignedUrl('getObject', {
 									Bucket: this.awsBucketName,
 									Key: file.Key,
-									Expires: this.linkExpirationSecs
+									Expires: LINK_EXPIRATION_SECS
 								}),
 								lastModifiedDate: file.LastModified,
 								size: humanReadableSize(file.Size)
 							});
 						});
 					}
-
 				}
 			);
 		} catch (error) {
@@ -180,7 +181,8 @@ export default class AwsS3Files extends LightningElement {
 					statusIcon: 'utility:threedots',
 					statusIconVariant: null,
 					progress: 0,
-					status: '',
+					loaded: '',
+					total: '',
 					finished: false
 				});
 				let uploadRequest = new AWS.S3.ManagedUpload({
@@ -193,9 +195,11 @@ export default class AwsS3Files extends LightningElement {
 				uploadRequest.on('httpUploadProgress', (progress) => {
 					let item = this.uploadProgressList.find((elem) => elem.key === progress.key);
 					item.progress = Math.round((progress.loaded * 100) / progress.total);
-					item.status = `${humanReadableSize(progress.loaded)} / ${humanReadableSize(progress.total)}`;
+					item.loaded = humanReadableSize(progress.loaded);
+					item.total = humanReadableSize(progress.total);
 				});
-				uploadRequest.promise()
+				uploadRequest
+					.promise()
 					.then((result) => {
 						let item = this.uploadProgressList.find((elem) => elem.key === result.Key);
 						item.finished = true;
@@ -272,7 +276,7 @@ export default class AwsS3Files extends LightningElement {
 	}
 
 	handleFileSelected(event) {
-		const index = this.fileList.findIndex((file) => file.id === event.target.getAttribute('data-id'));
+		const index = this.fileList.findIndex((file) => file.key === event.target.getAttribute('data-key'));
 		this.fileList[index].selected = event.target.checked;
 	}
 

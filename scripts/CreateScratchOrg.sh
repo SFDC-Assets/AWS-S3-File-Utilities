@@ -38,3 +38,5 @@ echo "*** Enabling debug mode for your user  ..."
 sfdx force:data:record:update --sobjecttype User --where "Name='User User'" --values "UserPreferencesUserDebugModePref='true'" --loglevel error
 echo "*** Creating sample data ..."
 sfdx force:apex:execute --apexcodefile "scripts/apex/SampleData.apex" --targetusername "$orgAlias" --loglevel error
+echo "*** Opening scratch org ..."
+sfdx force:org:open --loglevel error

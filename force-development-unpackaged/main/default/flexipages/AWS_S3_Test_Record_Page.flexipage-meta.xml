@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Lightning record page used to test the AWS S3 File Upload LWC.</description>
+    <description>Lightning record page used to test the AWS S3 File Utilities.</description>
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
@@ -58,10 +58,6 @@
                 <componentInstanceProperties>
                     <name>hideIcon</name>
                     <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>linkExpirationSecs</name>
-                    <value>86400</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>prefix</name>

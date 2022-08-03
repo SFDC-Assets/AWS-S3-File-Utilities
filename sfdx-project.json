@@ -4,8 +4,8 @@
             "path": "force-app",
             "default": true,
             "package": "AWS S3 File Utilities",
-            "versionName": "Version 2.0.0.0",
-            "versionNumber": "2.0.0.0",
+            "versionName": "Version 2.0.1.0",
+            "versionNumber": "2.0.1.0",
             "unpackagedMetadata": {
                 "path": "force-development-unpackaged"
             }
@@ -23,6 +23,7 @@
         "AWS S3 File Utilities@1.0.0-0": "04t2E000003kYfIQAU",
         "AWS S3 File Utilities@1.0.0-1": "04t2E000003kYfcQAE",
         "AWS S3 File Utilities@1.0.1-0": "04t2E000003kYfmQAE",
-        "AWS S3 File Utilities@2.0.0-0": "04t2E000003kYgpQAE"
+        "AWS S3 File Utilities@2.0.0-0": "04t2E000003kYgpQAE",
+        "AWS S3 File Utilities@2.0.1-0": "04t2E000003kYgzQAE"
     }
 }

@@ -128,7 +128,7 @@
 					</g>
 					</svg>
 						<div class="slds-text-longform">
-							<h3 class="slds-text-heading_medium">No related files found.</h3>
+							<h3 class="slds-text-heading_medium">No files found</h3>
 						</div>
 					</section>
 				</template>
@@ -160,14 +160,14 @@
 							</thead>
 							<tbody>
 								<template for:each={fileList} for:item="file">
-									<tr key={file.id}>
+									<tr key={file.key}>
 										<td width="3rem">
 											<lightning-input
 												type="checkbox"
 												checked={file.selected}
 												label={file.name}
 												variant="label-hidden"
-												data-id={file.id}
+												data-key={file.key}
 												class="slds-align_absolute-center"
 												onchange={handleFileSelected}
 											></lightning-input>
@@ -323,13 +323,14 @@
 						<h3 class="slds-text-heading_medium">You have a little work to do</h3>
 						<div class="slds-var-p-bottom_medium slds-text-body_regular slds-text-align_center">
 							<p>
-								You have not yet configured the component with the correct AWS Access Key Id and/or AWS Secret
+								You have not yet configured this component with the correct AWS Access Key Id and/or AWS Secret
 								Access Key in the Lightning App Builder. Please get these items from your AWS account administrator.
 							</p>
+							<p>(While you're at it, make sure that your AWS bucket name and AWS region are also set correctly.)</p>
 							<p>
-								Get complete configuration instructions at&nbsp;
+								You can get complete configuration instructions at&nbsp;
 								<lightning-formatted-url
-									label="this GitHib repository"
+									label="this GitHub repository"
 									value="https://github.com/SFDC-Assets/AWS-S3-File-Utilities"
 								></lightning-formatted-url>
 								.
@@ -373,7 +374,7 @@
 								<lightning-layout-item size="1" padding="around-small">
 									<lightning-icon icon-name={file.iconName} size="medium"></lightning-icon>
 								</lightning-layout-item>
-								<lightning-layout-item size="7" padding="around-small">
+								<lightning-layout-item size="8" padding="around-small">
 									<p>
 										<lightning-formatted-text value={file.name}></lightning-formatted-text>
 									</p>
@@ -382,10 +383,13 @@
 										variant="circular"
 										size="medium"
 									></lightning-progress-bar>
+									<p class="slds-text-align_right slds-text-body_small">
+										<lightning-formatted-text value={file.total}></lightning-formatted-text>
+									</p>
 								</lightning-layout-item>
-								<lightning-layout-item size="3" padding="around-small">
-									<p class="slds-text-align_center">
-										<lightning-formatted-text value={file.status}></lightning-formatted-text>
+								<lightning-layout-item size="2" padding="horizontal-medium">
+									<p class="slds-text-align_right slds-var-p-vertical_small slds-p-horizontal_medium">
+										<lightning-formatted-text value={file.loaded}></lightning-formatted-text>
 									</p>
 								</lightning-layout-item>
 								<lightning-layout-item size="1">
