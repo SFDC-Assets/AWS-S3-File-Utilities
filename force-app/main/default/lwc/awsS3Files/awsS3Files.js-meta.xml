@@ -14,6 +14,7 @@
         <targetConfig targets="lightning__RecordPage,lightning__AppPage,lightningCommunity__Default">
             <property name="cardTitle" label="Card Title" type="String" default="AWS Files" description="The title to be used at the top of the card." />
             <property name="hideIcon" label="Hide the AWS logo icon" type="Boolean" default="false" description="Hide the AWS logo on the Lightning card." />
+            <property name="hideViewAndTranscription" label="Hide media file view and transcription conrols" type="Boolean" default="false" description="Hide controls in the file lister that allow the user to view media files and their transcriptions." />
             <property name="prefix" label="Demo Prefix" type="String" description="A string that will uniquely identify your demo environment in the shared S3 bucket, such as 'Veterans Administration Demo on Tuesday'." />
             <property name="awsBucketName" label="AWS Bucket Name" type="String" default="MyBucket" description="The AWS bucket name." required="true" />
             <property name="awsRegion" label="AWS Region" type="String" default="us-east-1" description="The AWS region in which the S3 bucket is located." required="true" />

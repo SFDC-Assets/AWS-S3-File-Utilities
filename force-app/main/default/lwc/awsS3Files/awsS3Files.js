@@ -10,7 +10,7 @@
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript } from 'lightning/platformResourceLoader';
-import { humanReadableSize, getIconName, getFileExtension } from 'c/awsS3Utilities';
+import { humanReadableSize, getIconName, getFileExtension, isAudioFile, isVideoFile } from 'c/awsS3Utilities';
 import AWS_S3_SDK from '@salesforce/resourceUrl/AWS_S3_SDK';
 
 const MAX_FILE_NAME_LENGTH = 1024;
@@ -21,6 +21,7 @@ const LINK_EXPIRATION_SECS = 24 * 60 * 60;
 export default class AwsS3Files extends LightningElement {
 	@api cardTitle = 'AWS Files';
 	@api hideIcon = false;
+	@api hideViewAndTranscription = false;
 	@api prefix = null;
 	@api awsRegion;
 	@api awsAccessKeyId;
@@ -28,16 +29,12 @@ export default class AwsS3Files extends LightningElement {
 	@api awsBucketName;
 	@api recordId;
 
-	rendered = false;
 	spinnerVisible = false;
 
 	@track s3;
 
 	awsBucketPrefix;
-
-	get componentConfigured() {
-		return this.awsAccessKeyId !== UNCONFIGURED_ACCESS_KEY_ID && this.awsSecretAccessKey !== UNCONFIGURED_SECRET_ACCESS_KEY;
-	}
+	componentConfigured;
 
 	@track fileList = [];
 
@@ -59,7 +56,7 @@ export default class AwsS3Files extends LightningElement {
 
 	@track uploadProgressList;
 	progress = 0;
-	modalVisible = false;
+	uploadModalVisible = false;
 	uploadInProgress = false;
 
 	get uploadFinished() {
@@ -70,13 +67,18 @@ export default class AwsS3Files extends LightningElement {
 		return !this.uploadFinished;
 	}
 
-	connectedCallback() {
-		this.awsBucketPrefix = (this.prefix ? this.prefix + '/' : '') + (this.recordId ? this.recordId + '/' : '');
-	}
+	viewModalVisible = false;
+	fileBeingViewed = null;
+	fileBeingViewedIsVideo = false;
+	fileBeingViewedIsAudio = false;
+	fileNameBeingViewed = '';
+	fileBeingViewedIcon = null;
 
-	renderedCallback() {
-		console.log(`awsBucketPrefix: ${this.awsBucketPrefix}`);
-		if (!this.rendered && this.componentConfigured) {
+	connectedCallback() {
+		this.componentConfigured =
+			this.awsAccessKeyId !== UNCONFIGURED_ACCESS_KEY_ID && this.awsSecretAccessKey !== UNCONFIGURED_SECRET_ACCESS_KEY;
+		this.awsBucketPrefix = (this.prefix ? this.prefix + '/' : '') + (this.recordId ? this.recordId + '/' : '');
+		if (this.componentConfigured) {
 			loadScript(this, AWS_S3_SDK)
 				.then(() => {
 					AWS.config = new AWS.Config({
@@ -92,18 +94,9 @@ export default class AwsS3Files extends LightningElement {
 					this.getFiles();
 				})
 				.catch((error) => {
-					console.log(`Could not load static resource "${AWS_S3_SDK}": ${JSON.stringify(error)}`);
-					this.dispatchEvent(
-						new ShowToastEvent({
-							title: `Could not load static resource "${AWS_S3_SDK}"`,
-							message: `${JSON.stringify(error)}`,
-							variant: 'error',
-							mode: 'sticky'
-						})
-					);
+					console.error(`awsS3Files: Could not load static resource "${AWS_S3_SDK}": ${JSON.stringify(error)}`);
 				});
 		}
-		this.rendered = true;
 	}
 
 	getFiles() {
@@ -119,7 +112,7 @@ export default class AwsS3Files extends LightningElement {
 					if (error) {
 						this.dispatchEvent(
 							new ShowToastEvent({
-								title: `Could not get file list`,
+								title: 'Could not get file list',
 								message: error.message,
 								variant: 'error',
 								mode: 'sticky'
@@ -127,11 +120,17 @@ export default class AwsS3Files extends LightningElement {
 						);
 					} else if (data) {
 						data.Contents.forEach((file) => {
-							let fileName = file.Key.replace(this.awsBucketPrefix, '');
+							const fileName = file.Key.replace(this.awsBucketPrefix, '');
+							const audioFile = isAudioFile(fileName);
+							const videoFile = isVideoFile(fileName);
 							this.fileList.push({
 								selected: false,
 								name: fileName,
 								key: file.Key,
+								fileIsTranscribable: audioFile || videoFile,
+								audioFile: audioFile,
+								videoFile: videoFile,
+								viewIcon: videoFile ? 'utility:video' : audioFile ? 'utility:volume_high' : null,
 								icon: getIconName(fileName),
 								link: this.s3.getSignedUrl('getObject', {
 									Bucket: this.awsBucketName,
@@ -161,9 +160,9 @@ export default class AwsS3Files extends LightningElement {
 
 	handleFilesChange(event) {
 		this.uploadInProgress = true;
+		this.uploadModalVisible = true;
 		this.uploadProgressList = [];
 		[...event.target.files].forEach((file) => {
-			this.modalVisible = true;
 			if (file.name.length > MAX_FILE_NAME_LENGTH) {
 				this.dispatchEvent(
 					new ShowToastEvent({
@@ -225,7 +224,7 @@ export default class AwsS3Files extends LightningElement {
 	}
 
 	handleModalDoneButton(event) {
-		this.modalVisible = false;
+		this.uploadModalVisible = false;
 		this.getFiles();
 	}
 
@@ -240,15 +239,15 @@ export default class AwsS3Files extends LightningElement {
 	}
 
 	handleDeleteButton(event) {
-		let list = [];
+		let deleteList = [];
 		this.fileList.forEach((file) => {
-			if (file.selected) list.push({ Key: file.key });
+			if (file.selected) deleteList.push({ Key: file.key });
 		});
 		this.s3.deleteObjects(
 			{
 				Bucket: this.awsBucketName,
 				Delete: {
-					Objects: list
+					Objects: deleteList
 				}
 			},
 			(error, data) => {
@@ -276,13 +275,32 @@ export default class AwsS3Files extends LightningElement {
 	}
 
 	handleFileSelected(event) {
-		const index = this.fileList.findIndex((file) => file.key === event.target.getAttribute('data-key'));
-		this.fileList[index].selected = event.target.checked;
+		this.fileList.find((file) => file.key === event.target.getAttribute('data-key')).selected = event.target.checked;
 	}
 
 	handleSelectAll(event) {
 		this.fileList.forEach((file) => {
 			file.selected = event.target.checked;
 		});
+	}
+
+	handleDisplayTranscription(event) {
+		let file = this.fileList.find((file) => file.key === event.target.getAttribute('data-key'));
+	}
+
+	handleViewFile(event) {
+		let file = this.fileList.find((file) => file.key === event.target.getAttribute('data-key'));
+		this.fileBeingViewed = file.link;
+		this.fileNameBeingViewed = file.name;
+		this.fileBeingViewedIsVideo = file.videoFile;
+		this.fileBeingViewedIsAudio = file.audioFile;
+		this.fileBeingViewedIcon = file.videoFile ? 'utility:video' : 'utility:volume_high';
+		this.viewModalVisible = true;
+	}
+
+	handleViewModalDoneButton(event) {
+		this.fileBeingViewed = null;
+		this.fileNameBeingViewed = '';
+		this.viewModalVisible = false;
 	}
 }

@@ -9,7 +9,7 @@
 
 const humanReadableSize = (bytes) => {
 	let size = parseInt(bytes);
-	for (const unit of ['B', 'KB', 'MB', 'GB', 'TB', 'PB']) {
+	for (const unit of ['By', 'KB', 'MB', 'GB', 'TB', 'PB']) {
 		if (size < 1024) return `${size.toFixed(1)} ${unit}`;
 		size /= 1024.0;
 	}
@@ -114,4 +114,35 @@ const getIconName = (fileName) => {
 	}
 };
 
-export { humanReadableSize, getIconName, getFileExtension };
+const isAudioFile = (fileName) => {
+	switch (getFileExtension(fileName)) {
+		case 'mp3':
+		case 'au':
+		case 'wav':
+		case 'flac':
+		case 'm4a':
+			return true;
+		default:
+			return false;
+	}
+};
+
+const isVideoFile = (fileName) => {
+	switch (getFileExtension(fileName)) {
+		case 'mp4':
+		case 'm4v':
+		case 'mov':
+		case 'wmv':
+		case 'avi':
+		case 'avchd':
+		case 'mkv':
+		case 'webm':
+		case 'mpg':
+		case 'mpeg':
+			return true;
+		default:
+			return false;
+	}
+};
+
+export { humanReadableSize, getIconName, getFileExtension, isAudioFile, isVideoFile };
