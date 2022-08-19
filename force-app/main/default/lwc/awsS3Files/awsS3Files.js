@@ -68,7 +68,7 @@ export default class AwsS3Files extends LightningElement {
 	}
 
 	viewModalVisible = false;
-	fileBeingViewed = null;
+	fileBeingViewedUrl = null;
 	fileBeingViewedIsVideo = false;
 	fileBeingViewedIsAudio = false;
 	fileNameBeingViewed = '';
@@ -285,22 +285,25 @@ export default class AwsS3Files extends LightningElement {
 	}
 
 	handleDisplayTranscription(event) {
-		let file = this.fileList.find((file) => file.key === event.target.getAttribute('data-key'));
+		const file = this.fileList.find((file) => file.key === event.target.getAttribute('data-key'));
 	}
 
 	handleViewFile(event) {
-		let file = this.fileList.find((file) => file.key === event.target.getAttribute('data-key'));
-		this.fileBeingViewed = file.link;
+		const file = this.fileList.find((file) => file.key === event.target.getAttribute('data-key'));
+		this.fileBeingViewedUrl = file.link;
 		this.fileNameBeingViewed = file.name;
 		this.fileBeingViewedIsVideo = file.videoFile;
 		this.fileBeingViewedIsAudio = file.audioFile;
-		this.fileBeingViewedIcon = file.videoFile ? 'utility:video' : 'utility:volume_high';
+		this.fileBeingViewedIcon = file.viewIcon;
 		this.viewModalVisible = true;
 	}
 
 	handleViewModalDoneButton(event) {
-		this.fileBeingViewed = null;
+		this.fileBeingViewedUrl = null;
 		this.fileNameBeingViewed = '';
+		this.fileBeingViewedIsVideo = false;
+		this.fileBeingViewedIsAudio = false;
+		this.fileBeingViewedIcon = null;
 		this.viewModalVisible = false;
 	}
 }

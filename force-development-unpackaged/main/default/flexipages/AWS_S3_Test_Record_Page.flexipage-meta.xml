@@ -61,7 +61,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>prefix</name>
-                    <value>John&apos;s Scratch Org</value>
+                    <value></value>
                 </componentInstanceProperties>
                 <componentName>awsS3Files</componentName>
                 <identifier>c_awsS3Files</identifier>

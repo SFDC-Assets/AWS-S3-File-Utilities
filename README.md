@@ -90,6 +90,16 @@ To upload a file or set of files, click the `Upload Files` button or drag the fi
 
 ![Upload](images/Upload.png)
 
+## Media File Playback
+
+If a file is a video file, a button will appear on the left of the file list that will bring up a modal allowing the user to view the video file:
+
+![Video Playback](images/Video_Playback.png)
+
+If the file is an audio file, the user can push the audio button to listen to the audio:
+
+![Audio Playback](images/Audio_Playback.png)
+
 ## Caveats and Known Limitations
 
 - The authentication information (access key Id and secret access key) are entered in the configuration metadata for easy entry by Salesforce solution engineers using Lightning App Builder to demo this capability. A customer would never expose this sensitive information in a production environment, preferring to store this information in a named credential or by authenticating to AWS using SSO or some other more sophisticated mechanism. We leave such an implementation to the customer or to the customer's systems integrator and hope that the rest of this code can be useful to that effort.

@@ -189,24 +189,14 @@
 										<template if:false={hideViewAndTranscription}>
 											<td width="8rem">
 												<template if:true={file.fileIsTranscribable}>
-													<lightning-button-group>
-														<lightning-button-icon
-															type="button"
-															icon-name="utility:display_text"
-															size="small"
-															alternative-text="View a transcript of the file"
-															data-key={file.key}
-															onclick={handleDisplayTranscription}
-														></lightning-button-icon>
-														<lightning-button-icon
-															type="button"
-															icon-name={file.viewIcon}
-															size="small"
-															alternative-text="Preview the file"
-															data-key={file.key}
-															onclick={handleViewFile}
-														></lightning-button-icon>
-													</lightning-button-group>
+													<lightning-button-icon
+														type="button"
+														icon-name={file.viewIcon}
+														size="small"
+														alternative-text="Preview the file"
+														data-key={file.key}
+														onclick={handleViewFile}
+													></lightning-button-icon>
 												</template>
 											</td>
 										</template>
@@ -501,10 +491,10 @@
 						<section class="slds-modal__content slds-p-around_medium">
 							<div class="slds-align_absolute-center">
 								<template if:true={fileBeingViewedIsVideo}>
-									<video src={fileBeingViewed} controls preload="metadata" width="640px"></video>
+									<video src={fileBeingViewedUrl} controls preload="metadata" width="640px"></video>
 								</template>
 								<template if:true={fileBeingViewedIsAudio}>
-									<audio src={fileBeingViewed} controls preload="metadata"></audio>
+									<audio src={fileBeingViewedUrl} controls preload="metadata"></audio>
 								</template>
 							</div>
 						</section>
