@@ -7,6 +7,8 @@
 //
 //  Contact: john.meyer@salesforce.com
 
+// Call s3 command
+
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript } from 'lightning/platformResourceLoader';
@@ -128,6 +130,26 @@ export default class AwsS3Files extends LightningElement {
 							const fileName = file.Key.replace(this.awsBucketPrefix, '');
 							const audioFile = isAudioFile(fileName);
 							const videoFile = isVideoFile(fileName);
+                            
+                            // Retrieves object from Bucket as objectData string
+                            var objectData;
+                            this.s3.getObject({
+                                Bucket: this.awsBucketName,
+                                Key: "0036300001173cfAAA/Call-Center-Webinar-with-Talk-Track.json"
+                            }, function(err, data) {
+                                if (err) {
+                                    console.log("error encountered");
+                                    console.error(err);
+                                }
+                                else {
+                                    // var objectData = data.Body.toString('utf-8');                                  
+                                    objectData = data.Body.toString('utf-8');
+                                    // Prints out JSON if s3 getObject call works
+                                    console.log(objectData)
+                                }
+                            });
+                            
+
 							this.fileList.push({
 								selected: false,
 								name: fileName,
@@ -137,6 +159,7 @@ export default class AwsS3Files extends LightningElement {
 								videoFile: videoFile,
 								viewIcon: videoFile ? 'utility:video' : audioFile ? 'utility:volume_high' : null,
 								icon: getIconName(fileName),
+                                transcript: objectData,
 								link: this.s3.getSignedUrl('getObject', {
 									Bucket: this.awsBucketName,
 									Key: file.Key,
@@ -304,15 +327,16 @@ export default class AwsS3Files extends LightningElement {
 		this.fileKey = file.key;
 		var words = [];
 		var startTimes = [];
-		// console.log("boutta print");
-		// console.log(this.fileTranscript);
-		// console.log('shoulda print');
+		// Use print statement below to debug asynchronous call
+        // console.log(this.fileTranscript);
 
-		// const items = (JSON.parse(this.fileTranscript)).results.items;
-		// const items = this.fileTranscript.results.items;
 
-		// hardcoded items
+		// Option 1: Hardcoded JSON
 		const items = jsonTranscript.results.items;
+
+        // Option 2: Using JavaScript object passed from getObject call
+        // const items = (JSON.parse(this.fileTranscript)).results.items;
+
 
 		for (var i = 0; i < items.length; i++) {
 			words.push(items[i].alternatives[0].content);
