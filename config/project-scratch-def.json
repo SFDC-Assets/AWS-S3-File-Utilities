@@ -3,9 +3,7 @@
   "edition": "Developer",
   "features": [
     "EnableSetPasswordInApi",
-    "Communities",
-    "Chatbot"
-  ],
+    "Communities"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
