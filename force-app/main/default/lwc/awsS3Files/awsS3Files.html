@@ -490,6 +490,7 @@
 						</header>
 						<section class="slds-modal__content slds-p-around_medium">
 							<div class="slds-align_absolute-center">
+								<!-- VIDEO AND AUDIO -->
 								<template if:true={fileBeingViewedIsVideo}>
 									<video src={fileBeingViewedUrl} controls preload="metadata" width="640px"></video>
 								</template>
@@ -497,6 +498,18 @@
 									<audio src={fileBeingViewedUrl} controls preload="metadata"></audio>
 								</template>
 							</div>
+							<!-- TRANSCRIPTION -->
+							<div class="slds-media slds-media_center">
+								<div class="slds-media__body slds-p-horizontal_medium">
+									<p class="slds-text-heading_medium slds-text-align_left">Transcription:</p>
+									<lightning-formatted-text value={fileTranscript}></lightning-formatted-text>
+								</div>
+							</div>
+							<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+								<template for:each={fileTranscriptWords} for:item="word" for:index="index">
+									<lightning-button data-key={fileKey} data-index={index} key={word} variant="base" label={word} onclick={handleWordClick} class="slds-m-left_x-small"></lightning-button>
+								</template> 
+							</div>						  
 						</section>
 						<footer class="slds-modal__footer">
 							<lightning-button
